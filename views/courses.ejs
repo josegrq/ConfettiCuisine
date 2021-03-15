@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="col-sm-6">
+        <div class="image">
+            <img src="" alt="">
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="course-list">
+            <h1>Available Courses</h1>
+            <% offeredCourses.forEach(course => { %>
+                <h5>
+                    <%= course.title %>
+                </h5>
+                <span>
+                    $ <%= course.cost %>
+                </span>
+                <span>
+                    Instructor: <%= course.instructor %>
+                </span>
+            <% }); %>
+        </div>
+    </div>
+</div>
