@@ -1,36 +1,43 @@
-<div class="container">
-    <div class="col-sm-6">
-        <div class="image">
-            <img src="" alt="">
+<div class="container main-content">
+    <div class="col-sm-12">
+        <div class="image text-center">
+            <img class="rounded img-fluid" src="http://localhost:3000/images/contact-us.png" alt="contact poster">
         </div>
     </div>
-    <div class="contact-form">
+    <br>
+    <div class="contact-form col-sm-6 mx-auto text-center">
         <h1>Reach out to us!</h1>
         <p>Enter your information if you're interested to learn more!</p>
         <form action="/contact" method="POST">
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" placeholder="Jose" pattern="[a-zA-Z]" required>
-            <br>
 
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" placeholder="Ramirez" pattern="[a-zA-Z]" required>
-            <br>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label text-right" for="first_name">First Name</label>
+                <input class="col-sm-9 form-control" type="text" id="first_name" name="first_name" placeholder="Jose" required>
+            </div>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="jose.ramirez@email.com" required>
-            <br>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label text-right" for="last_name">Last Name</label>
+                <input class="col-sm-9 form-control" type="text" id="last_name" name="last_name" placeholder="Ramirez" required>
+            </div>
 
-            <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone" placeholder="(000)-000-0000" pattern="([0-9]{3})-[0-9]{3}-[0-9]{4}" required>
-            <br>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label text-right" for="email">Email</label>
+                <input class="col-sm-9 form-control" type="email" id="email" name="email" placeholder="jose.ramirez@email.com" required>
+            </div>
 
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="4" cols="50" placeholder="Write us a message!" required></textarea>
-            <br>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label text-right" for="phone">Phone</label>
+                <input class="col-sm-9 form-control" type="tel" id="phone" name="phone" placeholder="000-000-0000" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+            </div>
 
-            <div class="form-buttons">
-                <button type="submit">Send</button>
-                <button type="reset">Reset</button>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label mx-auto" for="message">Message</label>
+                <textarea class="col-sm-12 form-control" id="message" name="message" rows="4" cols="50" placeholder="Write us a message!" required></textarea>
+            </div>
+
+            <div class="form-buttons row">
+                <button class="btn btn-primary col-sm-3 mx-auto" type="submit">Send</button>
+                <button class="btn btn-secondary col-sm-3 mx-auto" type="reset">Reset</button>
             </div>
         </form>
     </div>

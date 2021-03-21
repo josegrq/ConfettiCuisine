@@ -22,8 +22,6 @@ app.use(express.json());
 
 //ROUTES GO HERE
 app.get('/courses', homeController.showCourses);
-app.get('/signUp', homeController.showSignUp); //Load sign up page
-app.post('/signUp', homeController.showSignUpPosted); //After form is submitted, we need to show msg to user
 app.get('/about', homeController.showAbout);
 app.get('/contact', homeController.showContact);
 app.post('/contact', homeController.showContactPosted);
