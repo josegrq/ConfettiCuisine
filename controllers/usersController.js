@@ -1,7 +1,7 @@
 const { request } = require("express");
-const Subscriber = require("../models/subscriber");
+const User = require("../models/user");
 
-const getSubscriberParams = (body) => {
+const getParams = (body) => {
   return {
     name: {
       first_name: body.first_name,
@@ -15,13 +15,14 @@ const getSubscriberParams = (body) => {
       zip: parseInt(body.zip),
     },
     phone: body.phone,
+    password: body.password,
   };
 };
 module.exports = {
   index: (request, response, next) => {
-    Subscriber.find()
-      .then((subscribers) => {
-        response.locals.subscribers = subscribers;
+    User.find()
+      .then((users) => {
+        response.locals.users = users;
         next();
       })
       .catch((error) => {
@@ -30,13 +31,13 @@ module.exports = {
       });
   },
   indexView: (request, response) => {
-    response.render("subscribers/index");
+    response.render("users/index");
   },
-  new: (request, response) => {
-    response.render("subscribers/new");
+  new: (rquest, response) => {
+    response.render("users/new");
   },
   create: (request, response, next) => {
-    let newSubscriber = new Subscriber({
+    let newUser = new User({
       name: {
         first_name: request.body.first_name,
         last_name: request.body.last_name,
@@ -49,11 +50,12 @@ module.exports = {
         zip: request.body.zip,
       },
       phone: request.body.phone,
+      password: request.body.password,
     });
-    Subscriber.create(newSubscriber)
-      .then((subscriber) => {
-        response.locals.subscriber = subscriber;
-        response.locals.redirect = "/subscribers";
+    User.create(newUser)
+      .then((user) => {
+        response.locals.user = user;
+        response.locals.redirect = "/users";
         next();
       })
       .catch((error) => {
@@ -69,11 +71,10 @@ module.exports = {
     next();
   },
   show: (request, response, next) => {
-    var subscriberId = request.params.id;
-    Subscriber.findById(subscriberId)
-      .then((subscriber) => {
-        response.locals.subscriber = subscriber;
-        console.log(subscriber);
+    let userId = request.params.id;
+    User.findById(userId)
+      .then((user) => {
+        response.locals.user = user;
         next();
       })
       .catch((error) => {
@@ -82,14 +83,13 @@ module.exports = {
       });
   },
   showView: (request, response) => {
-    console.log("Jose 4");
-    response.render("subscribers/show");
+    response.render("users/show");
   },
   edit: (request, response, next) => {
-    let subscriberId = request.params.id;
-    Subscriber.findById(subscriberId)
-      .then((subscriber) => {
-        response.render("subscribers/edit", { subscriber: subscriber });
+    let userId = request.params.id;
+    User.findById(userId)
+      .then((user) => {
+        response.render("users/edit", { user: user });
       })
       .catch((error) => {
         console.log(error);
@@ -97,9 +97,9 @@ module.exports = {
       });
   },
   update: (request, response, next) => {
-    let subscriberId = request.params.id;
-    let subscriberParams = getSubscriberParams(request.body);
-    /*let updatedSubscriber = new Subscriber({
+    let userId = request.params.id;
+    let userParams = getParams(request.body);
+    /*let updatedUser = new User({
       name: {
         first_name: request.body.first_name,
         last_name: request.body.last_name,
@@ -112,11 +112,13 @@ module.exports = {
         zip: request.body.zip,
       },
       phone: request.body.phone,
+      password: request.body.password,
     });*/
-    Subscriber.findByIdAndUpdate(subscriberId, subscriberParams)
-      .then((subscriber) => {
-        response.locals.redirect = `/subscribers/${subscriberId}`;
-        response.locals.subscriber = subscriber;
+    User.findByIdAndUpdate(userId, userParams)
+      .then((user) => {
+        response.locals.redirect = `/users/${userId}`;
+        response.locals.user = user;
+        console.log("Jose 0");
         next();
       })
       .catch((error) => {
@@ -125,11 +127,11 @@ module.exports = {
       });
   },
   delete: (request, response, next) => {
-    let subscriberId = request.params.id;
-    Subscriber.findByIdAndDelete(subscriberId)
-      .then((subscriber) => {
+    let userId = request.params.id;
+    User.findByIdAndDelete(userId)
+      .then((user) => {
         //You can do something woth the deleted subs info if you want
-        response.locals.redirect = "/subscribers";
+        response.locals.redirect = "/users";
         next();
       })
       .catch((error) => {
