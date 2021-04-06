@@ -99,26 +99,10 @@ module.exports = {
   update: (request, response, next) => {
     let userId = request.params.id;
     let userParams = getParams(request.body);
-    /*let updatedUser = new User({
-      name: {
-        first_name: request.body.first_name,
-        last_name: request.body.last_name,
-      },
-      email: request.body.email,
-      address: {
-        street: request.body.street,
-        city: request.body.city,
-        state: request.body.state,
-        zip: request.body.zip,
-      },
-      phone: request.body.phone,
-      password: request.body.password,
-    });*/
     User.findByIdAndUpdate(userId, userParams)
       .then((user) => {
         response.locals.redirect = `/users/${userId}`;
         response.locals.user = user;
-        console.log("Jose 0");
         next();
       })
       .catch((error) => {

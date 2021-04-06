@@ -15,7 +15,6 @@ module.exports = {
   index: (request, response, next) => {
     Course.find()
       .then((courses) => {
-        console.log(courses);
         response.locals.courses = courses;
         next();
       })
@@ -85,13 +84,6 @@ module.exports = {
   update: (request, response, next) => {
     let courseId = request.params.id;
     let courseParams = getParams(request.body);
-    /*let updatedCourse = new Course({
-      title: request.body.title,
-      description: request.body.description,
-      instructor: request.body.instructor,
-      maxStudents: request.body.maxStudents,
-      cost: request.body.cost,
-    });*/
     Course.findByIdAndUpdate(courseId, courseParams)
       .then((course) => {
         response.locals.course = course;

@@ -73,7 +73,6 @@ module.exports = {
     Subscriber.findById(subscriberId)
       .then((subscriber) => {
         response.locals.subscriber = subscriber;
-        console.log(subscriber);
         next();
       })
       .catch((error) => {
@@ -82,7 +81,6 @@ module.exports = {
       });
   },
   showView: (request, response) => {
-    console.log("Jose 4");
     response.render("subscribers/show");
   },
   edit: (request, response, next) => {
@@ -99,20 +97,6 @@ module.exports = {
   update: (request, response, next) => {
     let subscriberId = request.params.id;
     let subscriberParams = getSubscriberParams(request.body);
-    /*let updatedSubscriber = new Subscriber({
-      name: {
-        first_name: request.body.first_name,
-        last_name: request.body.last_name,
-      },
-      email: request.body.email,
-      address: {
-        street: request.body.street,
-        city: request.body.city,
-        state: request.body.state,
-        zip: request.body.zip,
-      },
-      phone: request.body.phone,
-    });*/
     Subscriber.findByIdAndUpdate(subscriberId, subscriberParams)
       .then((subscriber) => {
         response.locals.redirect = `/subscribers/${subscriberId}`;
@@ -128,7 +112,6 @@ module.exports = {
     let subscriberId = request.params.id;
     Subscriber.findByIdAndDelete(subscriberId)
       .then((subscriber) => {
-        //You can do something woth the deleted subs info if you want
         response.locals.redirect = "/subscribers";
         next();
       })
