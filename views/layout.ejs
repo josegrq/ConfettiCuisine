@@ -78,7 +78,33 @@
           <input type="text" placeholder="Search" />
         </div>
       </nav>
+      <div class="login-bar">
+        <% if(loggedIn) { %>
+
+        <div class="logged">
+          <p class="alert alert-info">
+            Logged in as
+            <a href="<%= `/users/${currentUser._id}` %>">
+              <%= `${currentUser.name.first_name} ${currentUser.name.last_name}`
+              %></a
+            >
+          </p>
+          <a class="btn btn-danger" href="/users/logout">Log out</a>
+        </div>
+        <% } else { %>
+        <a class="btn btn-primary" href="/users/login">Login</a>
+        <%}%>
+      </div>
     </header>
+    <div class="flash-messages text-center">
+      <% if(flashMessages) { %> <% if(flashMessages.success) { %>
+      <div class="alert alert-success"><%= flashMessages.success %></div>
+      <% }else if(flashMessages.error) { %>
+      <div class="alert alert-danger"><%= flashMessages.error %></div>
+      <% }else if(flashMessages.warning) { %>
+      <div class="alert alert-warning"><%= flashMessages.warning %></div>
+      <% } %> <% } %>
+    </div>
     <%- body%>
     <footer class="footer">
       <div class="law">

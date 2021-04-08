@@ -8,6 +8,13 @@ const coursesController = require("./controllers/coursesController");
 const layouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
+const passport = require("passport");
+const cookieParser = require("cookie-parser");
+const expressValidator = require("express-validator");
+const expressSession = require("express-session");
+const flash = require("connect-flash");
+const User = require("./models/user");
+const { request } = require("express");
 
 mongoose.connect("mongodb://localhost:27017/ConfettiCuisine", {
   useNewUrlParser: true,
@@ -33,6 +40,35 @@ app.use(
 //Interpret body and query string data as JSON
 router.use(express.json());
 router.use(methodOverride("_method", { methods: ["POST", "GET"] }));
+router.use(expressValidator());
+
+//Use sessions
+router.use(cookieParser("secure_passcode"));
+router.use(
+  expressSession({
+    secret: "secure_passcode",
+    cookie: {
+      maxAge: 360000,
+    },
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+router.use(flash());
+
+//Use Passport and use same session strategy for msgs
+router.use(passport.initialize());
+router.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+router.use((request, response, next) => {
+  response.locals.flashMessages = request.flash();
+  response.locals.loggedIn = request.isAuthenticated();
+  response.locals.currentUser = request.user;
+  next();
+});
 
 //ROUTES GO HERE
 /*app.get("/courses", homeController.showCourses);
@@ -84,16 +120,26 @@ router.get("/users", usersController.index, usersController.indexView);
 router.get("/users/new", usersController.new);
 router.post(
   "/users/create",
+  usersController.validate,
   usersController.create,
   usersController.redirectView
 );
-router.get("/users/:id", usersController.show, usersController.showView);
+router.get("/users/login", usersController.login);
+router.post("/users/login", usersController.authenticate);
+router.get(
+  "/users/logout",
+  usersController.logout,
+  usersController.redirectView
+);
+
 router.get("/users/:id/edit", usersController.edit);
 router.put(
   "/users/:id/update",
+  usersController.validate,
   usersController.update,
   usersController.redirectView
 );
+router.get("/users/:id", usersController.show, usersController.showView);
 router.delete(
   "/users/:id/delete",
   usersController.delete,

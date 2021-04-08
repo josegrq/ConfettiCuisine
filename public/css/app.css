@@ -5,7 +5,7 @@
 }
 
 body {
-  padding-top: 64px;
+  margin-top: 65px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,7 +22,7 @@ body {
 }
 
 .main-content {
-  padding: 50px 0;
+  padding: 75px 0;
   background-color: #75b79e;
   flex: 1;
 }
@@ -35,8 +35,32 @@ body {
   box-shadow: 3px 3px 10px black;
 }
 
+.login-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin-top: 70px;
+  padding: 5px 10px;
+  background-color: transparent;
+  z-index: 10;
+}
+.logged {
+  display: flex;
+  min-height: 50px;
+  justify-content: space-between;
+}
+.logged p,
+.logged a {
+  position: relative;
+  height: 100%;
+}
+
 @media (max-width: 1000px) {
   body {
     padding-top: 214px;
+  }
+  .login-bar {
+    margin-top: 215px;
   }
 }

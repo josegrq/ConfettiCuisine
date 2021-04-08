@@ -1,5 +1,6 @@
 const { request } = require("express");
 const User = require("../models/user");
+const passport = require("passport");
 
 const getParams = (body) => {
   return {
@@ -19,6 +20,21 @@ const getParams = (body) => {
   };
 };
 module.exports = {
+  login: (request, response) => {
+    response.render("users/login");
+  },
+  authenticate: passport.authenticate("local", {
+    failureRedirect: "/users/login",
+    failureFlash: "Login failed. Double check your inputs.",
+    successRedirect: "/",
+    successFlash: "Successfully logged in!",
+  }),
+  logout: (request, response, next) => {
+    request.logout();
+    request.flash("success", "You have been logged out.");
+    response.locals.redirect = "/";
+    next();
+  },
   index: (request, response, next) => {
     User.find()
       .then((users) => {
@@ -36,7 +52,37 @@ module.exports = {
   new: (rquest, response) => {
     response.render("users/new");
   },
+  validate: (request, response, next) => {
+    //Validate input from user
+    request
+      .sanitizeBody("email")
+      .normalizeEmail({
+        all_lowercase: true,
+      })
+      .trim();
+
+    request.check("email", "Email is not valid").isEmail();
+    request.check("zip", "ZIP code is not valid").notEmpty().isInt().isLength({
+      min: 5,
+      max: 5,
+    });
+    request.check("password", "Password cannot be empty").notEmpty();
+    request.getValidationResult().then((error) => {
+      if (!error.isEmpty()) {
+        let messages = errors.array().map((error) => error.message);
+        request.flash("error", messages.join(" and "));
+        request.skip = true;
+        response.redirect = "/users/new";
+        next();
+      } else {
+        next();
+      }
+    });
+  },
   create: (request, response, next) => {
+    if (request.skip) {
+      return next();
+    }
     let newUser = new User({
       name: {
         first_name: request.body.first_name,
@@ -52,16 +98,20 @@ module.exports = {
       phone: request.body.phone,
       password: request.body.password,
     });
-    User.create(newUser)
-      .then((user) => {
-        response.locals.user = user;
+    User.register(newUser, request.body.password, (error, user) => {
+      if (user) {
+        request.flash("success", "Successfully created new account!");
         response.locals.redirect = "/users";
         next();
-      })
-      .catch((error) => {
-        console.log(error);
-        next(error);
-      });
+      } else {
+        request.flash(
+          "error",
+          `New user account failed to create: ${error.message}`
+        );
+        response.locals.redirect = "/users/new";
+        next();
+      }
+    });
   },
   redirectView: (request, response, next) => {
     let path = response.locals.redirect;
