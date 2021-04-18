@@ -49,7 +49,7 @@ module.exports = {
   indexView: (request, response) => {
     response.render("users/index");
   },
-  new: (rquest, response) => {
+  new: (request, response) => {
     response.render("users/new");
   },
   validate: (request, response, next) => {
@@ -69,10 +69,10 @@ module.exports = {
     request.check("password", "Password cannot be empty").notEmpty();
     request.getValidationResult().then((error) => {
       if (!error.isEmpty()) {
-        let messages = errors.array().map((error) => error.message);
+        let messages = error.array().map((e) => e.message);
         request.flash("error", messages.join(" and "));
         request.skip = true;
-        response.redirect = "/users/new";
+        response.locals.redirect = "/users/new";
         next();
       } else {
         next();
@@ -152,6 +152,7 @@ module.exports = {
     User.findByIdAndUpdate(userId, userParams)
       .then((user) => {
         response.locals.redirect = `/users/${userId}`;
+        request.flash("success", "Successfully updated your account!");
         response.locals.user = user;
         next();
       })
