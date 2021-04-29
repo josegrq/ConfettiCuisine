@@ -9,10 +9,14 @@ const expressSession = require("express-session");
 const flash = require("connect-flash");
 const User = require("./models/user");
 
-mongoose.connect("mongodb://localhost:27017/ConfettiCuisine", {
-  useNewUrlParser: true,
-  useFindAndModify: false,
-});
+mongoose.connect(
+  //Conenct to DB defined in MONGODB_URI or deafult to localhost
+  process.env.MONGODB_URI || "mongodb://localhost:27017/ConfettiCuisine",
+  {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+  }
+);
 
 const app = express();
 const router = require("./routes/index");
